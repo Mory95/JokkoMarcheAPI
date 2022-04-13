@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Models\marque;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
 class MarqueController extends Controller
@@ -15,7 +16,7 @@ class MarqueController extends Controller
      */
     public function index()
     {
-        //
+        return marque::all();
     }
 
     /**
@@ -26,7 +27,14 @@ class MarqueController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validation = $request->validate([
+            'libelle' => 'required|string',
+            'logo' => 'required|string',
+        ]);
+        return marque::create([
+            'libelle' => $validation['libelle'],
+            'logo' => $validation['logo']
+        ]);
     }
 
     /**
@@ -37,19 +45,28 @@ class MarqueController extends Controller
      */
     public function show(marque $marque)
     {
-        //
+        // return marque::find($marque['id']);
+        return $marque['id'];
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\marque  $marque
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, marque $marque)
     {
-        //
+        $validation = $request->validate([
+            'libelle' => 'required|string',
+            'logo' => 'required|string'
+        ]);
+
+        return marque::find($marque['id'])->update([
+            'libelle' => $validation['libelle'],
+            'logo' => $validation['logo']
+        ]);
     }
 
     /**
@@ -60,6 +77,7 @@ class MarqueController extends Controller
      */
     public function destroy(marque $marque)
     {
-        //
+        DB::table('marques')->whereId($marque['id'])->delete();
+        return marque::all();
     }
 }

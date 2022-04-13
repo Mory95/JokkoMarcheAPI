@@ -19,3 +19,19 @@ use Illuminate\Support\Facades\Route;
 // });
 
 Route::apiResource('/bonInterne', 'App\Http\Controllers\Api\V1\BonInterneController');
+Route::apiResource('/bonLivraison', 'App\Http\Controllers\Api\V1\BonLivraisonController');
+Route::apiResource('/fournisseur', 'App\Http\Controllers\Api\V1\FournisseurController');
+Route::apiResource('/marque', 'App\Http\Controllers\Api\V1\MarqueController');
+Route::apiResource('/user', 'App\Http\Controllers\Api\V1\UserController');
+Route::apiResource('/categorie/product', 'App\Http\Controllers\Api\V1\CategorieProductController');
+Route::apiResource('/product', 'App\Http\Controllers\Api\V1\ProductController');
+
+// Sociéte
+Route::apiResource('/categorie/societe', 'App\Http\Controllers\Api\V1\CategorieSocietyController');
+Route::apiResource('/societe', 'App\Http\Controllers\Api\V1\SocietyController');
+
+// Marque product
+Route::apiResource('/marque', 'App\Http\Controllers\Api\V1\MarqueController');
+
+// EntreeStock
+Route::apiResource('/entreeStock', 'App\http\controllers\Api\V1\EntreeStockController');

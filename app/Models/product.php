@@ -15,7 +15,7 @@ class product extends Model
         'sold',
         'quantity',
         'image',
-        'new_product',
+        'new_prod',
         'price',
         'categorie_id'
     ];

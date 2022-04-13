@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Models\categorie_society;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CategorieSocietyController extends Controller
 {
@@ -15,7 +16,7 @@ class CategorieSocietyController extends Controller
      */
     public function index()
     {
-        //
+        return categorie_society::all();
     }
 
     /**
@@ -26,40 +27,52 @@ class CategorieSocietyController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validation = $request->validate([
+            'libelle' => 'required|string',
+        ]);
+        categorie_society::create([
+            'libelle' => $validation['libelle']
+        ]);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\categorie_society  $categorie_society
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function show(categorie_society $categorie_society)
+    public function show($id)
     {
-        //
+        return categorie_society::find($id);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\categorie_society  $categorie_society
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, categorie_society $categorie_society)
+    public function update(Request $request, $id)
     {
-        //
+        $validation = $request->validate([
+            'libelle' => 'required|string',
+        ]);
+        $society = categorie_society::find($id);
+        $society->update([
+            'libelle' => $validation['libelle']
+        ]);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\categorie_society  $categorie_society
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(categorie_society $categorie_society)
+    public function destroy($id)
     {
-        //
+        DB::table('categorie_societies')->whereId($id)->delete();
+        return categorie_society::all();
     }
 }

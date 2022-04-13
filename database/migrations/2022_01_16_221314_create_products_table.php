@@ -20,13 +20,14 @@ class CreateProductsTable extends Migration
             $table->float('sold');
             $table->integer('quantity');
             $table->string('image');
-            $table->boolean('new_prod');
+            $table->boolean('new_prod')->nullable();
             $table->float('price');
             $table->foreignId('categorie_id')
                 ->constrained('categorie_products')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
             $table->foreignId('user_id')
+                ->nullable()
                 ->constrained('users')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');

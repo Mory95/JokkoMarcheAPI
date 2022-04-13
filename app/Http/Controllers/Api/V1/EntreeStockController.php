@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Models\EntreeStock;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class EntreeStockController extends Controller
 {
@@ -15,7 +16,7 @@ class EntreeStockController extends Controller
      */
     public function index()
     {
-        //
+        return EntreeStock::all();
     }
 
     /**
@@ -26,7 +27,13 @@ class EntreeStockController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validation = $request->validate([
+            'libelle' => 'required|string',
+        ]);
+
+        return EntreeStock::create([
+            'libelle' => $validation['libelle']
+        ]);
     }
 
     /**
@@ -37,7 +44,7 @@ class EntreeStockController extends Controller
      */
     public function show(EntreeStock $entreeStock)
     {
-        //
+        return $entreeStock;
     }
 
     /**
@@ -49,7 +56,13 @@ class EntreeStockController extends Controller
      */
     public function update(Request $request, EntreeStock $entreeStock)
     {
-        //
+        $validation = $request->validate([
+            'libelle' => 'required|string',
+        ]);
+
+        return EntreeStock::find($entreeStock['id'])->update([
+            'libelle' => $validation['libelle']
+        ]);
     }
 
     /**
@@ -60,6 +73,6 @@ class EntreeStockController extends Controller
      */
     public function destroy(EntreeStock $entreeStock)
     {
-        //
+        DB::table('entree_stocks')->whereId($entreeStock['id'])->delete();
     }
 }
