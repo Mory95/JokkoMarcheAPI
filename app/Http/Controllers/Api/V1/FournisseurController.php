@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Models\fournisseur;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class FournisseurController extends Controller
@@ -13,33 +12,38 @@ class FournisseurController extends Controller
      //REGISTER API 
      public function register(Request $request){
         //validation 
-        $request->validate([
+        $attrs = $request->validate([
             "first_name"=> "required",
             "last_name"=> "required",
             "sexe"=> "required",
             "adress"=> "required",
             "phone_number"=> "required",
-            "email"=> "required|email|unique:clients",
+            "email"=> "required|email|unique:fournisseurs",
             "password"=> "required|confirmed",            
         ]);
-        //create data
-        $fournisseur = new Fournisseur();
-        $fournisseur->first_name = $request->first_name;
-        $fournisseur->last_name = $request->last_name;
-        $fournisseur->sexe = $request->sexe;
-        $fournisseur->adress = $request->adress;
-        $fournisseur->email = $request->email;
-        $fournisseur->phone_number = isset($request->phone_number) ? $request->phone_number : "";
-        $fournisseur->password = Hash::make($request->password);
         
-
-        $fournisseur->save();
+        $fourn = fournisseur::create([
+            'first_name' => $attrs['first_name'],
+            'last_name' => $attrs['last_name'],
+            'sexe' => $attrs['sexe'],
+            'adress' => $attrs['adress'],
+            'phone_number' => $attrs['phone_number'],
+            'email' => $attrs['email'],
+            'password' => hash::make($attrs['password']),
+        ]);
 
         // send response
         return response()->json([
-            "status" => 1,
-            "message" => "Fournisseur registered succesfully bravo "
+            'fournisseur' => $fourn,
+            'token' => $fourn->createToken($attrs['first_name'])->plainTextToken
         ]);
+    }
+        
+    public function fournisseur()
+    {
+        return response([
+              'user' => auth()->user()
+          ],200);
     }
      // LOGIN API
      public function login(Request $request)
@@ -49,17 +53,12 @@ class FournisseurController extends Controller
              "email" => "required|email",
              "password" => "required"
          ]);
- 
          // check client
          $fournisseur = Fournisseur::where("email", "=", $request->email)->first();
- 
          if(isset($fournisseur->id)){
- 
              if(Hash::check($request->password, $fournisseur->password)){
- 
                  // create a token
                  $token = $fournisseur->createToken("auth_token")->plainTextToken;
- 
                  /// send a response
                  return response()->json([
                      "status" => 1,
@@ -84,12 +83,11 @@ class FournisseurController extends Controller
      // LOGOUT API
     public function logout()
     {
-       // auth()->user()->tokens()->delete();
-    
-
-        $fournisseur= Auth::Client()->token();
-        $fournisseur->revoke();
-        return response()->json('Successfully logged out');
+        // Auth::logout();
+       auth()->user()->tokens()->delete();
+        // $fournisseur= Auth::Client()->token();
+        // $fournisseur->revoke();
+        // return response()->json('Successfully logged out');
 
         return response()->json([
             "status" => 1,
@@ -97,14 +95,10 @@ class FournisseurController extends Controller
         ]);
     }
     public function profil(){
-
-        $fournisseur=Fournisseur::get();
-        dd(auth()->user());
         return response()->json([
             "status" =>1,
             "message"=>"list des fournisseur",
-            "data" => auth()->user(),
-            // "data"=>$fournisseur
+            'user' => auth()->user()
 
         ]);
     }
@@ -115,7 +109,7 @@ class FournisseurController extends Controller
      */
     public function index()
     {
-        //
+        return fournisseur::all();
     }
 
     /**

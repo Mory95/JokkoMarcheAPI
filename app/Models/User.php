@@ -25,6 +25,8 @@ class User extends Authenticatable
         'phone_number',
         'email',
         'password',
+        'society_id',
+        'profil_id'
     ];
 
     /**
@@ -53,5 +55,9 @@ class User extends Authenticatable
     public function society()
     {
         return $this->belongsTo(society::class);
+    }
+    public function profil()
+    {
+        return $this->belongsTo(profil::class);
     }
 }

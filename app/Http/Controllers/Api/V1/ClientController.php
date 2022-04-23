@@ -12,8 +12,8 @@ class ClientController extends Controller
 {
     //REGISTER API 
     public function register(Request $request){
-        //validation 
-        $request->validate([
+        //validation
+        $attrs = $request->validate([
             "first_name"=> "required",
             "last_name"=> "required",
             "sexe"=> "required",
@@ -38,7 +38,8 @@ class ClientController extends Controller
         // send response
         return response()->json([
             "status" => 1,
-            "message" => "client registered succesfully"
+            "message" => "client registered succesfully",
+            'token' => $client->createToken($attrs['first_name'])->plainTextToken
         ]);
     }
      // LOGIN API
@@ -84,16 +85,18 @@ class ClientController extends Controller
      // LOGOUT API
     public function logout()
     {
-       // auth()->user()->tokens()->delete();
-    
-
-        $client= Auth::Client()->token();
-        $client->revoke();
-        return response()->json('Successfully logged out');
+       auth()->user()->tokens()->delete();
 
         return response()->json([
             "status" => 1,
             "message" => "Client logged out successfully"
+        ]);
+    }
+
+    public function profil()
+    {
+        return response([
+            'Client' => auth()->user()
         ]);
     }
     /**

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
@@ -38,7 +39,7 @@ class ProductController extends Controller
             'categorie_id' => 'required',
 
         ]);
-        Product::create([
+        $prod = Product::create([
             'libelle' => $validation['libelle'],
             'description' => $validation['description'],
             'sold' => $validation['sold'],
@@ -47,7 +48,9 @@ class ProductController extends Controller
             'new_prod' => $validation['new_prod'],
             'price' => $validation['price'],
             'categorie_id' => $validation['categorie_id'],
+            'user_id' => auth()->id()
         ]);
+        return $prod;
     }
 
     /**

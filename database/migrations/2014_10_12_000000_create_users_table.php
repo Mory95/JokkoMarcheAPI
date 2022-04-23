@@ -25,12 +25,17 @@ class CreateUsersTable extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
 
-            
             $table->foreignId('society_id')
+            ->nullable()
             ->constrained('societies')
             ->onUpdate('cascade')
             ->onDelete('cascade');
             
+            $table->foreignId('profil_id')
+            ->constrained('profils')
+            ->onUpdate('cascade')
+            ->onDelete('cascade');
+
             $table->rememberToken();
             $table->timestamps();
         });
